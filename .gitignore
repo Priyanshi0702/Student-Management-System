@@ -2,3 +2,5 @@
 *.o
 *.obj
 .vscode/
+*.exe
+student.txt
