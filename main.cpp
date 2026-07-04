@@ -24,10 +24,7 @@ class Student
     }
     void showdata()
     {   
-        cout<<roll<<" "; 
-        cout<<name<<" ";
-        cout<<mks<<" ";
-        cout<<cgpa<<" "<<"\n";
+        cout<<roll<<"\t"<<"\t"<<name<<"\t"<<mks<<"\t"<<cgpa<<"\n";
         
     }
     void setroll(int r)
@@ -70,6 +67,7 @@ class StudentManagement
 {
     public:
     void addstudent();
+    void displaystudent();
     void searchstudent();
     void updatestudent();
     void deletestudent();
@@ -90,17 +88,114 @@ void StudentManagement::addstudent()
     cout<<"New student added successfully, \n";
     
 }
+void StudentManagement::displaystudent()
+{
+    ifstream fin("student.txt");
+    if (!fin)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    Student s;
+    cout<<"Displaying all students: "<<endl;
+    cout<<"Roll number"<<"\t"<<"Name"<<"\t"<<"Marks"<<"\t"<<"CGPA"<<endl;
+    int r;
+    string n;
+    int m;
+    float c;
+    while(fin>>r>>n>>m>>c)
+    {
+        s.setroll(r);
+        s.setname(n);
+        s.setmarks(m);
+        s.setcgpa(c);
+        
+        s.showdata();
+    }
+    fin.close();
+}
+void StudentManagement::searchstudent()
+{
+    int roll;
+    cout<<"Enter roll number of student to search: ";
+    cin>>roll;
+    ifstream fin("student.txt");
+    if (!fin)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    Student s;
+    bool f=0;
+    int r;
+    string n;
+    int m;
+    float c;
+    while(fin>>r>>n>>m>>c)
+    {
+        s.setroll(r);
+        s.setname(n);
+        s.setmarks(m);
+        s.setcgpa(c);
+        if(s.getroll()==roll)
+        {
+            cout<<"Student found: "<<endl;
+            cout<<"Roll number"<<"\t"<<"Name"<<"\t"<<"Marks"<<"\t"<<"CGPA"<<endl;
+            s.showdata();
+            f = 1;
+            break;
+        }
+    }
+    if(f==0)
+    {
+        cout<<"Student not found"<<endl;
+    }
+    fin.close();
+}
 
 int main()
 {   
-    cout<<"enter the number of students you want to add: ";
-    int n;
-    cin>>n;
+    int choice;
     StudentManagement obj1;
-    for(int i=1; i<=n; i++)
+    do
     {
-        obj1.addstudent();
+    
+    cout<<"please select the number according to the operation you want to perform: "<<endl;
+    cout<<"1 for Add student"<<endl;
+    cout<<"2 for Display students"<<endl;
+    cout<<"3 for Search student"<<endl;
+    cout<<"4 for Exit"<<endl;
+   
+    cout<<"Enter your choice: ";
+    cin>>choice;
+    switch(choice)
+    {
+        case 1:
+        {
+        cout<<"enter the number of students you want to add: ";
+        int n;
+        cin>>n;
+            for(int i=1; i<=n; i++)
+            {
+                obj1.addstudent();
+            }
+            break;
+        }
+        case 2:
+            obj1.displaystudent();
+            break;
+        case 3:
+            obj1.searchstudent();
+            break;
+            case 4:
+            cout<<"Exiting the program."<<endl;
+            cout<<"thankyou for using the Student Management program!"<<endl;
+            break;
+        default:
+            cout<<"Invalid choice!"<<endl;
     }
+}
+while(choice!=4);
     return 0;
 }
 
