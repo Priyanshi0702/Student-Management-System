@@ -77,16 +77,39 @@ void StudentManagement::addstudent()
     Student s;
     cout<<"Enter student details: "<<endl;
     s.getdata();
-    ofstream fout ("student.txt",ios::app);
-    if (!fout)
+    ifstream fin("student.txt");
+    if(!fin)
+    {
+        cout << "Error opening file!\n";
+        return;
+    }
+    Student temp;
+int r, m;
+string n;
+float c;
+
+while(fin >> r >> n >> m >> c)
 {
-    cout << "Error opening file!\n";
-    return;
+    if(r == s.getroll())
+    {
+        cout << "Roll number already exists!\n";
+        fin.close();
+        return;
+    }
 }
+    {
+        ofstream fout ("student.txt",ios::app);
+        if (!fout)
+        {
+            cout << "Error opening file!\n";
+            return;
+        }
+
     fout<<s.getroll()<<" "<<s.getname()<<" "<<s.getmarks()<<" "<<s.getcgpa()<<" "<<"\n";
     fout.close();
     cout<<"New student added successfully, \n";
     
+}
 }
 void StudentManagement::displaystudent()
 {
@@ -152,6 +175,97 @@ void StudentManagement::searchstudent()
     }
     fin.close();
 }
+void StudentManagement::updatestudent()
+{
+    int sroll;
+    cout<<"Enter roll number of student to update: ";
+    cin>>sroll;
+    ifstream fin("student.txt");
+    if (!fin)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    ofstream fout("temp.txt");
+    if (!fout)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    Student s;
+    bool f=0;
+    int r;
+    string n;
+    int m;
+    float c;
+    while(fin>>r>>n>>m>>c)
+    {
+        s.setroll(r);
+        s.setname(n);
+        s.setmarks(m);
+        s.setcgpa(c);
+        if(s.getroll()==sroll)
+        {
+            cout<<"Enter new details for student: "<<endl;
+            s.getdata();
+            f = 1;
+        }
+        fout<<s.getroll()<<" "<<s.getname()<<" "<<s.getmarks()<<" "<<s.getcgpa()<<" "<<"\n";
+    }
+    fin.close();
+    fout.close();
+    remove("student.txt");
+    rename("temp.txt","student.txt");
+    if(f==1)
+        cout<<"Student details updated successfully"<<endl;
+    else
+        cout<<"Student not found"<<endl;
+}
+void StudentManagement::deletestudent()
+{
+    int sroll;
+    cout<<"Enter roll number of student to delete: ";
+    cin>>sroll;
+    ifstream fin("student.txt");
+    if (!fin)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    ofstream fout("temp.txt");
+    if (!fout)
+{
+    cout << "Error opening file!\n";
+    return;
+}
+    Student s;
+    bool f=0;
+    int r;
+    string n;
+    int m;
+    float c;
+    while(fin>>r>>n>>m>>c)
+    {
+        s.setroll(r);
+        s.setname(n);
+        s.setmarks(m);
+        s.setcgpa(c);
+        if(s.getroll()==sroll)
+        {
+            f = 1;
+            continue; // Skip writing this student to the new file
+        }
+        fout<<s.getroll()<<" "<<s.getname()<<" "<<s.getmarks()<<" "<<s.getcgpa()<<" "<<"\n";
+    }
+    fin.close();
+    fout.close();
+    remove("student.txt");
+    rename("temp.txt","student.txt");
+    if(f==1)
+        cout<<"Student deleted successfully"<<endl;
+    else
+        cout<<"Student not found"<<endl;
+}
 
 int main()
 {   
@@ -164,7 +278,9 @@ int main()
     cout<<"1 for Add student"<<endl;
     cout<<"2 for Display students"<<endl;
     cout<<"3 for Search student"<<endl;
-    cout<<"4 for Exit"<<endl;
+    cout<<"4 for Update student"<<endl;
+    cout<<"5 for Delete student"<<endl;
+    cout<<"6 for Exit"<<endl;
    
     cout<<"Enter your choice: ";
     cin>>choice;
@@ -187,7 +303,13 @@ int main()
         case 3:
             obj1.searchstudent();
             break;
-            case 4:
+        case 4:
+            obj1.updatestudent();
+            break;
+        case 5:
+            obj1.deletestudent();
+            break;
+        case 6:
             cout<<"Exiting the program."<<endl;
             cout<<"thankyou for using the Student Management program!"<<endl;
             break;
@@ -195,7 +317,7 @@ int main()
             cout<<"Invalid choice!"<<endl;
     }
 }
-while(choice!=4);
+while(choice!=6);
     return 0;
 }
 
